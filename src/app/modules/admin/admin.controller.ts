@@ -11,8 +11,26 @@ const getAllAdmins = async (req: Request, res: Response) => {
         res.status(200).json({
             success: true,
             message: "Admin Fetched Successfully.",
-            meta : result.meta,
+            meta: result.meta,
             data: result.data
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.name || "Failed to create admin.",
+            error: err
+        });
+    }
+};
+
+const getAdminById = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const result = await AdminServices.getAdminById(id);
+        res.status(200).json({
+            success: true,
+            message: "Admin Fetched Successfully.",
+            data: result
         });
     } catch (err) {
         res.status(500).json({
@@ -26,4 +44,5 @@ const getAllAdmins = async (req: Request, res: Response) => {
 
 export const AdminControllers = {
     getAllAdmins,
+    getAdminById,
 }
