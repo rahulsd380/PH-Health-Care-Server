@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import { AdminServices } from "./admin.service";
 import pick from "../../../shared/pick";
 import { adminFilterableFields } from "./admin.constants";
+import { prisma } from "../../../shared/prisma";
 
 const getAllAdmins = async (req: Request, res: Response) => {
     const filters = pick(req.query, adminFilterableFields);
@@ -42,6 +43,7 @@ const getAdminById = async (req: Request, res: Response) => {
 };
 
 const updateAdminData = async (req: Request, res: Response) => {
+   
     try {
         const { id } = req.params;
         const result = await AdminServices.updateAdminData(id, req.body);
@@ -59,9 +61,29 @@ const updateAdminData = async (req: Request, res: Response) => {
     }
 };
 
+const deleteAdmin = async (req: Request, res: Response) => {
+   
+    try {
+        const { id } = req.params;
+        const result = await AdminServices.deleteAdmin(id);
+        res.status(200).json({
+            success: true,
+            message: "Admin Deleted Successfully.",
+            data: result
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.name || "Failed to delete admin.",
+            error: err
+        });
+    }
+};
+
 
 export const AdminControllers = {
     getAllAdmins,
     getAdminById,
     updateAdminData,
+    deleteAdmin,
 }
