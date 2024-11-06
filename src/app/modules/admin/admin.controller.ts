@@ -62,10 +62,28 @@ const updateAdminData = async (req: Request, res: Response) => {
 };
 
 const deleteAdmin = async (req: Request, res: Response) => {
-   
     try {
         const { id } = req.params;
         const result = await AdminServices.deleteAdmin(id);
+        res.status(200).json({
+            success: true,
+            message: "Admin Deleted Successfully.",
+            data: result
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.name || "Failed to delete admin.",
+            error: err
+        });
+    }
+};
+
+const softDeleteAdmin = async (req: Request, res: Response) => {
+   
+    try {
+        const { id } = req.params;
+        const result = await AdminServices.softDeleteAdmin(id);
         res.status(200).json({
             success: true,
             message: "Admin Deleted Successfully.",
@@ -86,4 +104,5 @@ export const AdminControllers = {
     getAdminById,
     updateAdminData,
     deleteAdmin,
+    softDeleteAdmin,
 }
