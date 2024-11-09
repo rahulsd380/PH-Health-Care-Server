@@ -1,10 +1,28 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, RequestHandler, Response } from "express"
 import { AdminServices } from "./admin.service";
 import pick from "../../../shared/pick";
 import { adminFilterableFields } from "./admin.constants";
 import sendResponse from "../../../shared/sendResponse";
 
-const getAllAdmins = async (req: Request, res: Response) => {
+
+const catchAsync = (fn:RequestHandler) => {
+    return async (req:Request, res:Response, next:NextFunction) => {
+        try {
+            await fn(req, res, next);
+        } catch (error) {
+            console.error(error);
+            sendResponse(res, {
+                statusCode: 500,
+                success: false,
+                message: "Internal Server Error",
+                data: null
+            });
+        }
+    };
+};
+
+
+const getAllAdmins = catchAsync(async (req: Request, res: Response) => {
     const filters = pick(req.query, adminFilterableFields);
     const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
     const result = await AdminServices.getAllAdmins(filters, options);
@@ -15,7 +33,7 @@ const getAllAdmins = async (req: Request, res: Response) => {
         meta: result.meta,
         data: result.data
     })
-};
+})
 
 const getAdminById = async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -25,7 +43,7 @@ const getAdminById = async (req: Request, res: Response) => {
         success: true,
         message: "Admin Fetched Successfully.",
         data: result
-    })
+    });
 };
 
 const updateAdminData = async (req: Request, res: Response) => {
