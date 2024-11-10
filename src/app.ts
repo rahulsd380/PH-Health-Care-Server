@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response, urlencoded } from "express";
-import { UserRoutes } from "./app/modules/user/user.routes"
-import { AdminRoutes } from "./app/modules/admin/admin.route";
 import router from "./app/routes";
+import cookieParser from "cookie-parser"
 
 
 const express = require('express')
 const app = express()
 app.use(express.json());
+app.use(cookieParser())
 app.use(urlencoded({ extended: true }));
 
 
