@@ -9,6 +9,6 @@ const router = express.Router();
 
 
 
-router.post('/', auth("ADMIN"), UserControllers.createAdmin);
+router.post('/',  UserControllers.createAdmin);
 
 export const UserRoutes = router;

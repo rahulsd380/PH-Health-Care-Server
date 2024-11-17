@@ -8,10 +8,10 @@ import { UserRole } from '@prisma/client';
 
 const router = express.Router();
 
-router.get('/',auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), AdminControllers.getAllAdmins);
-router.get("/:id", AdminControllers.getAdminById);
-router.patch("/:id", validateRequest(adminValidationsSchemas.updateAdminInfo), AdminControllers.updateAdminData);
-router.delete("/:id", AdminControllers.deleteAdmin);
-router.delete("/soft/:id", AdminControllers.softDeleteAdmin);
+router.get('/', auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), AdminControllers.getAllAdmins);
+router.get("/:id", auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), AdminControllers.getAdminById);
+router.patch("/:id", auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), validateRequest(adminValidationsSchemas.updateAdminInfo), AdminControllers.updateAdminData);
+router.delete("/:id", auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), AdminControllers.deleteAdmin);
+router.delete("/soft/:id", auth(UserRole.SUPER_ADMIN, UserRole.ADMIN), AdminControllers.softDeleteAdmin);
 
 export const AdminRoutes = router;
